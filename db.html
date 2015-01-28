@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+       <meta charset="utf-8">
+  <title>Ruiyun Huang's code</title>
+  <!--link href="Site.css" rel="stylesheet"-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="../Scri.js"></script>
+  <link rel="stylesheet" href="../lay.css">
+    </head>
+    <body style="margin: 60px;">
+        <pre>
+          <code>
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class adwords {
+
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		FileReader frk = new FileReader("Keywords.dat");
+		BufferedReader brk = new BufferedReader(frk);
+		FileReader fra = new FileReader("Advertisers.dat");
+		BufferedReader bra = new BufferedReader(fra);
+		FileReader frq = new FileReader("Queries.dat");
+		BufferedReader brq = new BufferedReader(frq);
+		FileReader frin = new FileReader("system.in");
+	   	BufferedReader brin = new BufferedReader(frin);
+	   	String strin=null;
+	   	strin = brin.readLine();
+	   	String[] a3=strin.split("= ");
+	   	strin = brin.readLine();
+	   	String[] a4=strin.split("= ");
+	   	String user=null;
+	   	String pass=null;
+	   	for(int i=1;i< 2;i++){
+	   	user=a3[i];
+	   	pass=a4[i];
+	   	}
+		DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+		Connection conn=DriverManager.getConnection("jdbc:oracle:thin:hr/hr@oracle1.cise.ufl.edu:1521:orcl",user,pass);
+		Statement stmt = conn.createStatement ();
+		
+//insert system.in	
+		String sql = "CREATE TABLE Sys_in " +
+	                "(id INTEGER, " +
+                    " no INTEGER, " + 
+				    " PRIMARY KEY ( id ))"; 
+		 stmt.executeUpdate(sql);
+		
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a5=strin.split("= ");
+		PreparedStatement ps3 = conn.prepareStatement(sql);
+		ps3.setInt(1,1);
+		ps3.setString(2,a5[1]);
+		ps3.executeUpdate();
+		ps3.close();
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a6=strin.split("= ");
+		PreparedStatement ps4 = conn.prepareStatement(sql);
+		ps4.setInt(1,2);
+	    ps4.setString(2,a6[1]);
+		ps4.executeUpdate();
+		ps4.close();  
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a7=strin.split("= ");
+		PreparedStatement ps5 = conn.prepareStatement(sql);
+		ps5.setInt(1,3);
+		ps5.setString(2,a7[1]);
+		ps5.executeUpdate();
+		ps5.close();     
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a8=strin.split("= ");
+		PreparedStatement ps6 = conn.prepareStatement(sql);
+		ps6.setInt(1,4);
+		ps6.setString(2,a8[1]);
+		ps6.executeUpdate();
+		ps6.close();
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a9=strin.split("= ");
+		PreparedStatement ps7 = conn.prepareStatement(sql);
+		ps7.setInt(1,5);
+		ps7.setString(2,a9[1]);
+		ps7.executeUpdate();
+		ps7.close();
+		sql="INSERT INTO Sys_in (id,no)"+ "VALUES(?,?)";
+		strin = brin.readLine();
+		String[] a10=strin.split("= ");
+		PreparedStatement ps8 = conn.prepareStatement(sql);
+		ps8.setInt(1,6);
+		ps8.setString(2,a10[1]);
+		ps8.executeUpdate();
+		ps8.close();
+//insert system.in
+//insert advertiser
+		
+		sql = "CREATE TABLE ADVERTISERS " +
+              "(advertiserId INTEGER, " +
+              " budget FLOAT, " + 
+              " ctc FLOAT, " + 
+              " PRIMARY KEY (advertiserId))"; 
+	 stmt.executeUpdate(sql);
+	 String stra=null;
+     sql="INSERT INTO ADVERTISERS (advertiserId,budget,ctc)"+ "VALUES(?,?,?)";
+	 while ((stra = bra.readLine()) != null) {
+     String[] aa=stra.split("\t");
+     PreparedStatement psa = conn.prepareStatement(sql);
+     for (int i = 1;i < 4;i++ ) {
+	        psa.setString(i,aa[i-1]);
+	  }
+      psa.executeUpdate();
+      psa.close();
+     } 
+//insert keywords
+	 sql = "CREATE TABLE KEYWORDS " +
+             "(advertiserId INTEGER not NULL, " +
+		                " keyword VARCHAR(100) not NULL, " + 
+		                " bid FLOAT, " + 
+		                " PRIMARY KEY (advertiserId,keyword ),"+
+	                    "FOREIGN KEY (advertiserId) REFERENCES ADVERTISERS)"; 
+     stmt.executeUpdate(sql);
+     String strk=null;
+	  sql="INSERT INTO KEYWORDS (advertiserId,keyword,bid)"+ "VALUES(?,?,?)";
+      while ((strk = brk.readLine()) != null) {
+        String[] ak=strk.split("\t");
+        PreparedStatement psk = conn.prepareStatement(sql);
+        for (int i = 1;i < 4;i++ ) {
+         psk.setString(i,ak[i-1]);
+        }
+        psk.executeUpdate();
+        psk.close();
+     }
+//insert queries
+      sql = "CREATE TABLE QUERIES " +
+              "(qid INTEGER not NULL, " +
+             " query VARCHAR(400), " + 
+             " PRIMARY KEY ( qid ))"; 
+      stmt.executeUpdate(sql);
+      String strq=null;
+      sql="INSERT INTO QUERIES (qid,query)"+ "VALUES(?,?)";
+      while ((strq = brq.readLine()) != null) {
+        String[] aq=strq.split("\t");
+        PreparedStatement psq = conn.prepareStatement(sql);
+        for (int i = 1;i < 3;i++ ) {
+	        psq.setString(i,aq[i-1]);
+	     }
+         psq.executeUpdate();
+         psq.close();
+     } 	
+//      
+      sql="CREATE TABLE Q_tok " +
+		  "(tok VARCHAR(400))" ;
+	  stmt.executeUpdate(sql); 
+	  sql = "CREATE TABLE Adinfo " +
+                "(aid INTEGER, " +
+               " balance FLOAT, " + 
+               " ctc FLOAT, " + 
+                "times integer," +
+               " PRIMARY KEY ( aid ))"; 
+     stmt.executeUpdate(sql);
+     sql = "CREATE TABLE Bid " +
+           "(aid INTEGER, " +
+            " sumbid FLOAT, " + 
+            " PRIMARY KEY ( aid ))"; 
+     stmt.executeUpdate(sql);
+
+     sql = "CREATE TABLE Auction " +
+           "(aid INTEGER, " +
+            " balance FLOAT, " + 
+           " ctc FLOAT, " + 
+           "times integer," + 
+           " PRIMARY KEY ( aid ))"; 
+       stmt.executeUpdate(sql);
+
+     sql = "CREATE TABLE Tok_A " +
+        	"(tok VARCHAR(400)," +
+        	"appear INTEGER, " +
+            "PRIMARY KEY ( tok ))"; 
+      stmt.executeUpdate(sql);
+
+     sql = "CREATE TABLE A_B " +
+	         "(aid INTEGER," +
+	        "multi INTEGER, " +
+           " PRIMARY KEY ( aid ))"; 
+      stmt.executeUpdate(sql);
+
+     sql = "CREATE TABLE BB " +
+        	"(aid INTEGER," +
+        	"cishu INTEGER, " +
+            "PRIMARY KEY ( aid ))"; 
+     stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE Similar " +
+           	"(aid INTEGER," +
+	        "simi FLOAT, " +
+            "PRIMARY KEY ( aid ))"; 
+      stmt.executeUpdate(sql);
+
+        sql = "CREATE TABLE Adrank " +
+	          "(aid INTEGER," +
+	         "score FLOAT, " +
+	          "arank INTEGER," +
+             "PRIMARY KEY ( aid ))"; 
+      stmt.executeUpdate(sql);
+
+       sql = "CREATE TABLE Up_b " +
+	         "(aid INTEGER," +
+           	"sumbid FLOAT, " +
+             "PRIMARY KEY ( aid ))"; 
+       stmt.executeUpdate(sql);
+
+        sql = "CREATE TABLE Output " +
+            	"(qid INTEGER," +
+            	"rank INTEGER," +
+	           "advertiserId INTEGER," +
+	            "balance FLOAT, " +
+	            "budget FLOAT, " +
+                "PRIMARY KEY ( qid,advertiserId ))"; 
+        stmt.executeUpdate(sql);
+
+        sql = "CREATE TABLE Output2 " +
+            	"(qid INTEGER," +
+             	"rank INTEGER," +
+            	"advertiserId INTEGER," +
+            	"balance FLOAT, " +
+	            "budget FLOAT, " +
+                "PRIMARY KEY ( qid,advertiserId ))"; 
+        stmt.executeUpdate(sql);
+        sql = "CREATE TABLE Output3 " +
+            	"(qid INTEGER," +
+            	"rank INTEGER," +
+            	"advertiserId INTEGER," +
+	            "balance FLOAT, " +
+	            "budget FLOAT, " +
+                 "PRIMARY KEY ( qid,advertiserId ))"; 
+         stmt.executeUpdate(sql);
+        sql = "CREATE TABLE Output4 " +
+	          "(qid INTEGER," +
+	          "rank INTEGER," +
+	          "advertiserId INTEGER," +
+	          "balance FLOAT, " +
+	          "budget FLOAT, " +
+               "PRIMARY KEY ( qid,advertiserId ))"; 
+        stmt.executeUpdate(sql);
+
+        sql = "CREATE TABLE Output5 " +
+  	          "(qid INTEGER," +
+  	          "rank INTEGER," +
+  	          "advertiserId INTEGER," +
+  	          "balance FLOAT, " +
+  	          "budget FLOAT, " +
+                 "PRIMARY KEY ( qid,advertiserId ))"; 
+          stmt.executeUpdate(sql);
+          sql = "CREATE TABLE Output6 " +
+    	          "(qid INTEGER," +
+    	          "rank INTEGER," +
+    	          "advertiserId INTEGER," +
+    	          "balance FLOAT, " +
+    	          "budget FLOAT, " +
+                   "PRIMARY KEY ( qid,advertiserId ))"; 
+            stmt.executeUpdate(sql);
+            
+         sql = "CREATE TABLE Gba " +
+	           "(aid INTEGER," +
+	           "ex FLOAT, " +
+               "PRIMARY KEY ( aid ))"; 
+          stmt.executeUpdate(sql);
+
+         sql = "CREATE TABLE next_hp " +
+	           "(aid INTEGER," +
+            	"nextbid FLOAT, " +
+              "PRIMARY KEY ( aid ))"; 
+         stmt.executeUpdate(sql);
+//
+         
+         Process p = Runtime.getRuntime().exec("sqlplus "+ user+"/"+pass +"@orcl " + "@adwords.sql");
+		p.waitFor();
+
+       
+//output
+         sql = "select * from Output order by qid,rank";
+		 ResultSet rs = stmt.executeQuery(sql);
+		 File f=new File("system.out.1");  
+         FileWriter fp=new FileWriter(f);
+         while (rs.next()) {  
+             String qid = rs.getString(1); 
+             String rank = rs.getString(2);
+             String aid = rs.getString(3);
+             String balance = rs.getString(4);
+             String budget = rs.getString(5);
+            fp.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp.flush();
+         fp.close();
+         
+         sql = "select * from Output2 order by qid,rank";
+		 ResultSet rs2 = stmt.executeQuery(sql);
+		 File f2=new File("system.out.2");  
+         FileWriter fp2=new FileWriter(f2);
+         while (rs2.next()) {  
+             String qid = rs2.getString(1); 
+             String rank = rs2.getString(2);
+             String aid = rs2.getString(3);
+             String balance = rs2.getString(4);
+             String budget = rs2.getString(5);
+            fp2.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp2.flush();
+         fp2.close();
+         
+         sql = "select * from Output3 order by qid,rank";
+		 ResultSet rs3 = stmt.executeQuery(sql);
+		 File f3=new File("system.out.3");  
+         FileWriter fp3=new FileWriter(f3);
+         while (rs3.next()) {  
+             String qid = rs3.getString(1); 
+             String rank = rs3.getString(2);
+             String aid = rs3.getString(3);
+             String balance = rs3.getString(4);
+             String budget = rs3.getString(5);
+            fp3.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp3.flush();
+         fp3.close();
+         
+         sql = "select * from Output4 order by qid,rank";
+		 ResultSet rs4 = stmt.executeQuery(sql);
+		 File f4=new File("system.out.4");  
+         FileWriter fp4=new FileWriter(f4);
+         while (rs4.next()) {  
+             String qid = rs4.getString(1); 
+             String rank = rs4.getString(2);
+             String aid = rs4.getString(3);
+             String balance = rs4.getString(4);
+             String budget = rs4.getString(5);
+            fp4.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp4.flush();
+         fp4.close();
+         
+         sql = "select * from Output5 order by qid,rank";
+		 ResultSet rs5 = stmt.executeQuery(sql);
+		 File f5=new File("system.out.5");  
+         FileWriter fp5=new FileWriter(f5);
+         while (rs5.next()) {  
+             String qid = rs5.getString(1); 
+             String rank = rs5.getString(2);
+             String aid = rs5.getString(3);
+             String balance = rs5.getString(4);
+             String budget = rs5.getString(5);
+            fp5.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp5.flush();
+         fp5.close();
+         
+         sql = "select * from Output6 order by qid,rank";
+		 ResultSet rs6 = stmt.executeQuery(sql);
+		 File f6=new File("system.out.6");  
+         FileWriter fp6=new FileWriter(f6);
+         while (rs6.next()) {  
+             String qid = rs6.getString(1); 
+             String rank = rs6.getString(2);
+             String aid = rs6.getString(3);
+             String balance = rs6.getString(4);
+             String budget = rs6.getString(5);
+            fp6.write(qid+", "+rank+", "+aid+", "+balance+", "+budget+"\n");  
+         }
+         fp6.flush();
+         fp6.close();
+         brk.close();
+         bra.close();
+         brq.close();
+         brin.close();
+	}
+
+}
+          </code>
+        </pre>
+    </body>
+</html>
