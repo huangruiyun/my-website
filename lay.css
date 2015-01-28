@@ -1,0 +1,45 @@
+
+.edu .exp{
+   text-align: left;
+   margin-left: 20px;
+}
+.row{
+    margin: 10px;
+}
+.details {
+    display:none;
+}
+#javacode{
+    display:none;
+}
+.prodetail{
+    display:none;
+}
+ul{
+    list-style-type:circle;
+}
+.course{
+    margin-bottom: 30px;
+}
+.main{
+    margin: 30px;
+}
+.jumbotron{
+    background-image: url(/img/bg.jpg);
+}
+.post{
+    background-color: Lavender;
+    text-align: left;
+    
+}
+/*body {
+ overflow: auto;
+ SCROLLBAR-FACE-COLOR: rgb(0,186,186);
+ SCROLLBAR-HIGHLIGHT-COLOR: rgb(0,140,109);
+ SCROLLBAR-SHADOW-COLOR: rgb(23,71,255);
+ SCROLLBAR-3DLIGHT-COLOR: rgb(233,0,93);
+ SCROLLBAR-ARROW-COLOR: rgb(255,23,250);
+ SCROLLBAR-TRACK-COLOR: rgb(93,144,255);
+ SCROLLBAR-DARKSHADOW-COLOR: rgb(233,0,109);
+ SCROLLBAR-BASE-COLOR: rgb(128,128,128)
+}*/
