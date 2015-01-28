@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+  <title>Ruiyun Huang's project</title>
+  <!--link href="Site.css" rel="stylesheet"-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="../Scri.js"></script>
+  <link rel="stylesheet" href="../lay.css">
+    </head>
+    <body>
+        <div class="jumbotron" style="margin: 0;padding-top: 0px;">
+        <h1 style="text-align: center;font-family:Lucida Console;">Hello! This website is made by Ruiyun Huang</h1>
+        <p style="text-align: center;font-family:Lucida Console;">You can get to know me by checking what I did</p>
+        </div>
+            <nav class="navbar navbar-inverse">
+      <ul class="nav navbar-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="resume.html">Resume</a></li>
+          <li class="active"><a href="pro.html">Project</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="mailto:huangruiyun1990@gmail.com">send me a email</a></li>
+      </ul>
+  </nav>
+        <section class="main">
+        <section class="dstruc">
+            <h2>Implementation of Dijkstra Algorithm</h2>
+            <div class="describe">
+            <h3>Problem description:</h3>
+            <p>You are required to implement
+Dijikstra
+algorithm
+to
+find
+the
+length
+of
+a
+shortest
+path
+from
+a
+given
+source
+vertex
+to
+each
+of
+the
+remaining
+vertices
+in
+an
+undirected
+graph,
+using
+a
+simple
+data
+structure,
+say
+simple scheme,
+as
+well
+as
+Fibonacci
+heap,
+say
+f-heap scheme,
+and
+measure
+the
+relative
+performance
+of
+the
+two
+implementations.
+Both
+of
+the
+schemes
+MUST use
+the
+adjacency
+lists
+representation
+for
+graphs.
+The
+simple
+scheme
+uses
+an
+array
+to
+determine
+the
+next
+edge
+to
+include
+while
+the
+f‐heap
+scheme
+uses
+a
+Fibonacci
+heap
+to
+do
+this.
+The
+simple
+scheme
+should
+run
+in
+O
+(n^2)
+time,
+where
+n
+is
+the
+number
+of
+vertices
+in
+the
+graph.</p>
+            </div>
+        <h3><a href="ds.html" target="_blank">C++ Code</a></h3>
+        <h3>Structure of program:</h3>
+        <div>
+            <h4>1. Random input mode (function “randmode”):</h4>
+            <ul>
+            <li>1. Type in the number of vertex: n, edge density: d and source node: x.</li>
+            <li>2. Generate graph.</li>
+            <li>3. Simple scheme to implement dijkstra algorithm.<button><span class="caret"></span></button>
+                <ol type="1" class="prodetail">
+                <li>Define a array called “dist[]” with initial value infinity.</li>
+                <li>dist[i] equals to the weight of node i in the graph.</li>
+                <li>For each node in the graph except the source node: 
+                    Find the shortest path from source to other nodes. If the cost of path through one node’s adjacent node is less than the cost of previous path, then update the dist value of that node.</li>
+                </ol>
+            </li>
+            <li>4. Fibonacci heap scheme to implement dijkstra algorithm.<button><span class="caret"></span></button>
+                <ol type="1" class="prodetail">
+                    <li>Define a array called “dist[]” with initial value infinity.</li>
+                    <li>Initialize a new Fibonacci heap with function “heap_initial”.</li>
+                    <li>For each node in graph: 
+                       Function “cre_nd” create new Fibonacci node with label i and weight dist[i], and insert it into the heap using function “Insert”.</li>
+                    <li>Make dist value of source node equals to 0. Function “de_key” is for the key of source node to dist[source], which is 0.</li>
+                    <li>Function “Findmin” finds the node u with minimum weight. “ex_min” extracts that node and the update the minimum pointer of the heap.</li>
+                    <li>For each nerghbor v of u: 
+                      if dist[v] is larger than dist[u] plus weight between u and v, then update dist[v] and “de_key” function updates weight of node v in the heap.</li>
+                 </ol>
+            </li>
+            </ul>
+        </div>
+        <div>
+            <h4>2. User input mode(function “fileinput")</h4>
+            <ol type="1">
+                <li>Read the file with ifstream.</li>
+               <li>Use “getline” to store each line in the file into a string.</li>
+               <li>First line is the source node x, second line is number of vertex and edge, and the rest are the edges needed to be added into the graph. “addedge” function adds all the edges into the graph.</li>
+                <li>Simple scheme to implement dijkstra algorithm.</li>
+                <li>Fibonacci heap scheme to implement dijkstra algorithm.</li>
+            </ol>
+        </div>
+        </section>
+            <ul class="pager">
+               <li class="next"><a href="pro2.html">Next:
+                   <small> Database Design for Online Advertisement</small></a></li>
+            </ul>
+        </section>
+    </body>
+</html>
