@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+  <title>Ruiyun Huang's project</title>
+  <!--link href="Site.css" rel="stylesheet"-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="../Scri.js"></script>
+  <link rel="stylesheet" href="../lay.css">
+    </head>
+    <body>
+        <div class="jumbotron" style="margin: 0;padding-top: 0px;">
+        <h1 style="text-align: center;font-family:Lucida Console;">Hello! This website is made by Ruiyun Huang</h1>
+        <p style="text-align: center;font-family:Lucida Console;">You can get to know me by checking what I did</p>
+        </div>
+            <nav class="navbar navbar-inverse">
+      <ul class="nav navbar-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="resume.html">Resume</a></li>
+          <li class="active"><a href="pro.html">Project</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="mailto:huangruiyun1990@gmail.com">send me a email</a></li>
+      </ul>
+  </nav>
+        <section class="main">
+        <section class="database">
+            <h2>Database Design for Online Advertisement</h2>
+            <div class="describe">
+                <h3>Problem description:</h3>
+                <p>
+By far the most lucrative venue for on-line
+advertising has been search, and much of the eectiveness of search advertising comes from
+the \AdWords" model of matching search queries to advertisements. For this project, you
+need to use Java to access an Oracle database and accomplish an on-line ads auction system
+using various bidding algorithms.
+                </p>
+                <p>
+                    We are going to consider on-line algorithms for solving the AdWords problem, which is
+dened as follows. Given:
+                </p>
+                <ul>
+                    <li>A set of bids by advertisers for search queries;</li>
+                    <li>A click-through rate for each advertiser-query pair;</li>
+                    <li>A budget for each advertiser;</li>
+                    <li>A limit on the number of ads to be displayed with each search query.</li>
+                </ul>
+                <p>
+                     Respond to each search query with a set of advertisers such that:
+                </p>
+                <ul>
+                    <li>The size of the set is no larger than the limit on the number of ads per query.</li>
+                    <li>Each advertiser has bid on the search query.</li>
+                    <li>Each advertiser has enough budget left to pay for the ad if it is clicked upon.</li>
+                </ul>
+                <p>
+                    The data set consists of three database tables: (primary keys are underlined)
+                </p>
+                <pre>
+                     <strong>Queries</strong>(qid:INTEGER, query:VARCHAR(400))
+                     <strong>Advertisers</strong>(advertiserId:INTEGER, budget:FLOAT, ctc:FLOAT)
+                     <strong>Keywords</strong>(advertiserId:INTEGER, keyword:VARCHAR(100), bid:FLOAT)</pre>
+                <h4>On-line Auction Algorithms to the AdWords Problem
+                    <small>One advertiser bid one query i the bid > 0 else the advertiser will not go into the auction
+process. Assuming that only K ads can be displayed for each query. It is also possible that
+the K slots are not fullled if there are not enough advertiser to bid the query.</small>
+                </h4>
+                <ol type="1">
+                    <li>The Greedy Algorithm<small>For each query, the greedy algorithm picks advertisers who has the highest bid for it. The
+Top-K advertisers who bid the query and have the highest bids will be shown.</small></li>
+                    <li>The Balance Algorithm<small>There is a simple improvement to the greedy algorithm. This algorithm, called the Balance
+Algorithm, assigns a query to the Top-K advertisers who bid on the query and have the
+largest remaining budgets.</small></li>
+                    <li>The Generalized Balance Algorithm<small>Suppose that a query q arrives, advertiser Ai has bid xi for this query (note that xi could
+be 0). Also, suppose that fraction fi of the budget of Ai is currently unspent. Let Si =
+xi(1-e<sup>-fi</sup> ). Then assign q to the Top-K advertisers who bid the query and have the highest Si.</small></li>
+                </ol>
+                <h4>Charging Advertisers for Clicks:<small>The advertiser will be charged i the ads was clicked.</small>
+                </h4>
+                <dl>
+                    <dt>1. first-price auction:</dt>
+                    <dd>-- when a user clicks on an advertiser's ad, the advertiser is charged the
+amount they bid. This policy is known as a rst-price auction.</dd>
+                    <dt>2. second-price auction</dt>
+                    <dd>-- In reality, search engines use a more complicated system known as
+a second-price auction. An advertiser for a search will pay the bid of the next highest bid
+advertiser who bid the query . If the advertiser's bid itself is the smallest, it will pay the
+price it bids in this case. It has been shown that second-price auctions are less susceptible
+to being gamed by advertisers than rst-price auctions and lead to higher revenues for the
+search engine.</dd>
+                </dl>
+                <h4>Task</h4>
+                <p>There are 6 tasks you need to nish in this project:</p>
+                <ul>
+                    <li>first price auction and the greedy algorithm.</li>
+                    <li>first price auction and the balance algorithm.</li>
+                    <li>first price auction and the generalized balance algorithm.</li>
+                     <li>second price auction and the greedy algorithm.</li>
+                     <li>second price auction and the balance algorithm.</li>
+                     <li>second price auction and the generalized balance algorithm.</li>
+                </ul>
+            </div>
+            <h3><a href="db.html" target="_blank">JAVA Code</a></h3>
+            <h3><a href="db2.html" target="_blank">SQL Code</a></h3>
+            <h3>Improvement</h3>
+            <p>After dropping the trigger, the performance of new implementation is better than original one.
+               The main improvement is due to dropping the trigger. Because trigger inefficient during executing the sql queries.
+               I have tried to create index on the qid or advertiser id on some tables but it didn’t work. Maybe it is because I loop one query every time and all the computation is for one query. 
+               I also tried making some changes in the sql queries, but the improvement almost can be ignored .
+            </p>
+            <h3><a href="db3.html" target="_blank">Optimized SQL Code</a></h3>
+        </section>
+            <ul class="pager">
+               <li class="previous"><a href="pro1.html">Previous:<small> Implementation of Dijkstra Algorithm</small></a></li>
+               <li class="next"><a href="pro3.html">Next:<small> Tracking Moving Objects Using Kalman Filter</small></a></li>
+            </ul>
+        </section>
+    </body>
+</html>
