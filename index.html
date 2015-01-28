@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Ruiyun Huang</title>
+  <!--link href="Site.css" rel="stylesheet"-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="Scri.js"></script>
+  <link rel="stylesheet" href="lay.css">
+    <style>
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 70%;
+      margin: auto;
+  }
+  </style>
+</head>
+
+<body>
+        <div class="jumbotron" style="margin: 0;padding-top: 0px;">
+        <h1 style="text-align: center;font-family:Lucida Console;">Hello! This website is made by Ruiyun Huang</h1>
+        <p style="text-align: center;font-family:Lucida Console;">You can get to know me by checking what I did</p>
+        </div>
+    <nav class="navbar navbar-inverse" style="margin-bottom: 0px">
+      <ul class="nav navbar-nav">
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="resume.html">Resume</a></li>
+          <li><a href="pro.html">Project</a></li>
+          <li><a href="http://github.com/huangruiyun">Github</a></li>
+          <li><a href="mailto:huangruiyun1990@gmail.com">send me a email</a></li>
+          <li><a href="/php/test.php" target="_blank">log in</a></li>
+      </ul>
+  </nav>
+    <section class="main" style="margin-top: 0px; padding-top: 0px;">
+    <div class="container">
+  <br>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+      <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+      <div class="item active">
+        <a href="resume.html"><img src="/img/resume.jpg" alt="my resume" width="267" height="200"></a>
+        <div class="carousel-caption">
+          <h3 style="color: #000;">Check my resume</h3>
+        </div>
+      </div>
+
+      <div class="item">
+        <a href="pro.html"><img src="/img/proj.jpg" alt="my project" width="267" height="200"></a>
+        <div class="carousel-caption">
+          <h3>check my project</h3>
+        </div> 
+      </div>
+        
+      <div class="item">
+        <a href="/proj/pro3.html"><img src="/img/track.jpg" alt="my project3" width="267" height="200"></a>
+        <div class="carousel-caption">
+          <h3>check my project presentation</h3>
+          <p>Tracking Moving Objects Using Kalman Filter</p>
+        </div>        
+      </div>
+
+      <div class="item">
+        <a href="/proj/pro4.html"><img src="/img/face.jpg" alt="my project4" width="267" height="200"></a>
+        <div class="carousel-caption">
+          <h3>check my project presentation</h3>
+        <p>Face Recognition Using PCA Algorithm</p>
+        </div> 
+      </div>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'huangruiyun'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+ </section>
+
+</body>
+</html>
