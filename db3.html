@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+  <title>Ruiyun Huang's code</title>
+  <!--link href="Site.css" rel="stylesheet"-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="../Scri.js"></script>
+  <link rel="stylesheet" href="../lay.css">
+    </head>
+    <body style="margin: 60px;">
+        <pre>
+           <code>
+create index k_aid on KEYWORDS(advertiserId);
+
+create index que_qid on QUERIES(qid);
+
+create index a_aid on ADVERTISERS(advertiserId);
+
+create index ad_aid on Adinfo(aid);
+
+DECLARE
+
+maxi number;
+
+k number;
+
+minbid number;
+
+BEGIN
+
+SELECT MAX(qid) INTO maxi FROM QUERIES;
+
+DELETE FROM Adinfo;
+
+INSERT INTO Adinfo(aid,balance,ctc) (SELECT * FROM ADVERTISERS);
+
+UPDATE Adinfo SET times=0,ctc=100*ctc;
+
+
+for i in 1..30000
+
+loop
+
+
+DELETE FROM Q_tok;
+
+INSERT INTO Q_tok          
+
+(SELECT regexp_substr(que, '[^ ]+', 1, level)			 
+
+FROM (SELECT Q.query AS que FROM QUERIES Q WHERE Q.qid=77)
+
+connect by level <= regexp_count(que, '[^ ]+'));
+
+DELETE FROM Tok_A;
+
+INSERT INTO Tok_A
+
+(SELECT tok,COUNT(*)
+
+FROM Q_tok
+
+GROUP BY tok);
+
+DELETE FROM Bid;
+
+INSERT INTO Bid
+
+(SELECT K.advertiserId AS aid,sum(bid) AS sumbid
+
+FROM KEYWORDS K,Tok_A T
+
+WHERE K.keyword=T.tok
+
+GROUP BY K.advertiserId);
+
+DELETE FROM Auction;
+
+INSERT INTO Auction
+
+(SELECT A.*
+
+FROM Bid B,Adinfo A
+
+WHERE A.aid=B.aid AND A.balance>=B.sumbid);
+
+DELETE FROM A_B;
+
+INSERT INTO A_B
+
+(SELECT A.aid,SUM(T.appear)
+
+FROM Auction A,Tok_A T,KEYWORDS K
+
+WHERE  A.aid=K.advertiserId AND T.tok=K.keyword
+
+GROUP BY A.aid);
+
+DELETE FROM BB;
+
+INSERT INTO BB
+
+(SELECT  A.aid,COUNT(*)
+
+FROM Auction A,KEYWORDS K
+
+WHERE A.aid=K.advertiserId
+
+GROUP BY A.aid);
+
+UPDATE BB 
+
+SET cishu=cishu*(SELECT SUM(aa)
+
+FROM (SELECT A.appear*A.appear AS aa FROM Tok_A A));
+
+DELETE FROM Similar;
+
+INSERT INTO Similar
+
+(SELECT A_B.aid,A_B.multi*Au.ctc/sq
+
+FROM A_B,Auction Au,(SELECT BB.aid AS bbid,sqrt(BB.cishu) AS sq FROM BB) 
+
+WHERE A_B.aid=bbid AND A_B.aid=Au.aid);
+
+DELETE FROM Adrank;
+
+INSERT INTO Adrank(aid,score)
+
+(SELECT S.aid AS aid,S.simi*B.sumbid AS score                       
+
+FROM Bid B,Similar S
+
+WHERE B.aid=S.aid) 
+
+ORDER BY score DESC,aid ASC;  
+
+
+
+DELETE FROM Up_b;
+
+select no into k from Sys_in where id=1;
+
+for x in 1..k
+
+loop
+
+INSERT INTO Up_b
+
+(SELECT B.aid,B.sumbid FROM Bid B,Adrank Ak,(SELECT A1.aid AS Taid,MOD(A1.times,100) AS mo,A1.ctc AS Tctc FROM Adinfo A1)
+
+WHERE Ak.aid=B.aid AND taid=B.aid AND mo< Tctc and Ak.score=(select max(Ak2.score) from Adrank Ak2));
+
+delete from Adrank where score=(select max(Ak2.score) from Adrank Ak2);
+
+end loop;
+
+UPDATE Adinfo A
+
+SET A.balance=A.balance-(SELECT U.sumbid FROM Up_b U WHERE U.aid=A.aid)
+
+WHERE exists (SELECT * From Up_b WHERE A.aid=Up_b.aid);
+
+UPDATE Adinfo A
+
+SET A.times=A.times+1
+
+WHERE exists (SELECT * From Up_b WHERE A.aid=Up_b.aid);
+
+DELETE FROM Adrank;
+
+INSERT INTO Adrank(aid,score)
+
+(SELECT S.aid AS aid,S.simi*B.sumbid AS score                       
+
+FROM Bid B,Similar S
+
+WHERE B.aid=S.aid) 
+
+ORDER BY score DESC,aid ASC;
+
+select no into k from Sys_in where id=1;
+
+for x in 1..k
+
+loop
+
+INSERT INTO Output
+
+(SELECT Q.qid,x,Ad.aid,Ad.balance,Au.budget
+
+FROM Adinfo Ad,Adrank Ak,QUERIES Q,ADVERTISERS Au
+
+WHERE Q.qid=i AND Au.advertiserId=Ad.aid AND Ad.aid=Ak.aid AND Ak.score=(select max(Ak2.score) from Adrank Ak2));
+
+delete from Adrank where score=(select max(Ak2.score) from Adrank Ak2);
+
+end loop;
+
+end loop;
+
+DELETE FROM Adinfo;
+
+INSERT INTO Adinfo(aid,balance,ctc) (SELECT * FROM ADVERTISERS);
+
+UPDATE Adinfo SET times=0,ctc=100*ctc;
+
+
+
+for i in 1..30000
+
+loop
+
+
+
+DELETE FROM Q_tok;
+
+INSERT INTO Q_tok          
+
+(SELECT regexp_substr(que, '[^ ]+', 1, level)			 
+
+FROM (SELECT Q.query AS que FROM QUERIES Q WHERE Q.qid=i)
+
+connect by level <= regexp_count(que, '[^ ]+'));
+
+DELETE FROM Tok_A;
+
+INSERT INTO Tok_A
+
+(SELECT tok,COUNT(*)
+
+FROM Q_tok
+
+GROUP BY tok);
+
+DELETE FROM Bid;
+
+INSERT INTO Bid
+
+(SELECT K.advertiserId AS aid,sum(bid) AS sumbid
+
+FROM KEYWORDS K,Tok_A T
+
+WHERE K.keyword=T.tok
+
+GROUP BY K.advertiserId);
+
+DELETE FROM Auction;
+
+INSERT INTO Auction
+
+(SELECT A.*
+
+FROM Bid B,Adinfo A
+
+WHERE A.aid=B.aid AND A.balance>=B.sumbid);
+
+DELETE FROM A_B;
+
+INSERT INTO A_B
+
+(SELECT A.aid,SUM(T.appear)
+
+FROM Auction A,Tok_A T,KEYWORDS K
+
+WHERE  A.aid=K.advertiserId AND T.tok=K.keyword
+
+GROUP BY A.aid);
+
+DELETE FROM BB;
+
+INSERT INTO BB
+
+(SELECT  A.aid,COUNT(*)
+
+FROM Auction A,KEYWORDS K
+
+WHERE A.aid=K.advertiserId
+
+GROUP BY A.aid);
+
+UPDATE BB 
+
+SET cishu=cishu*(SELECT SUM(aa)
+
+FROM (SELECT A.appear*A.appear AS aa FROM Tok_A A));
+
+DELETE FROM Similar;
+
+INSERT INTO Similar
+
+(SELECT A_B.aid,A_B.multi*Au.ctc/sq
+
+FROM A_B,Auction Au,(SELECT BB.aid AS bbid,sqrt(BB.cishu) AS sq FROM BB) 
+
+WHERE A_B.aid=bbid AND A_B.aid=Au.aid);
+
+
+
+DELETE FROM Adrank;
+
+INSERT INTO Adrank(aid,score)
+
+(SELECT S.aid AS aid,S.simi*B.sumbid AS score                       
+
+FROM Bid B,Similar S
+
+WHERE B.aid=S.aid) 
+
+ORDER BY score DESC,aid ASC;    
+
+
+
+delete from next_hp;
+
+select no into k from Sys_in where id=2;
+
+for n in 1..k
+
+loop
+
+insert into next_hp 
+
+(SELECT distinct currentaid,B.sumbid From Bid B,(select B2.sumbid AS currentbid,B2.aid AS currentaid from Bid B2,Adrank A where B2.aid=A.aid and A.score=(select max(Ak2.score) from Adrank Ak2))
+
+where B.sumbid=(select max(B3.sumbid) from Auction Au,Bid B3 where B3.sumbid< currentbid and B3.aid=Au.aid));
+
+delete from Adrank where score=(select max(Ak2.score) from Adrank Ak2);
+
+end loop;
+
+
+
+DELETE FROM Adrank;
+
+INSERT INTO Adrank(aid,score)
+
+(SELECT S.aid AS aid,S.simi*B.sumbid AS score                       
+
+FROM Bid B,Similar S
+
+WHERE B.aid=S.aid) 
+
+ORDER BY score DESC,aid ASC;
+
+
+
+DELETE FROM Up_b;
+
+select no into k from Sys_in where id=2;
+
+for x in 1..k
+
+loop
+
+INSERT INTO Up_b
+
+(SELECT B.aid,B.sumbid FROM Bid B,Adrank Ak,(SELECT A1.aid AS Taid,MOD(A1.times,100) AS mo,A1.ctc AS Tctc FROM Adinfo A1)
+
+WHERE Ak.aid=B.aid AND taid=B.aid AND mo< Tctc and Ak.score=(select max(Ak2.score) from Adrank Ak2));
+
+
+
+delete from Adrank where score=(select max(Ak2.score) from Adrank Ak2);
+
+end loop;
+
+
+
+select min(B.sumbid) into minbid from Bid B,Auction Au where B.aid=Au.aid;
+
+update Adinfo A set A.balance=A.balance-minbid where A.aid in (select B.aid from Bid B,Up_b U where B.sumbid=minbid and B.aid=U.aid);
+
+update Adinfo A set A.balance=A.balance-(select N.nextbid from next_hp N where N.aid=A.aid) where A.aid in (select N2.aid from next_hp N2,Up_b U where N2.aid=U.aid);
+
+UPDATE Adinfo A
+
+SET A.times=A.times+1
+
+WHERE A.aid in (SELECT U.aid From Up_b U);
+
+
+
+DELETE FROM Adrank;
+
+INSERT INTO Adrank(aid,score)
+
+(SELECT S.aid AS aid,S.simi*B.sumbid AS score                       
+
+FROM Bid B,Similar S
+
+WHERE B.aid=S.aid) 
+
+ORDER BY score DESC,aid ASC;
+
+select no into k from Sys_in where id=2;
+
+for x in 1..k
+
+loop
+
+INSERT INTO Output2
+
+(SELECT Q.qid,x,Ad.aid,Ad.balance,Au.budget
+
+FROM Adinfo Ad,Adrank Ak,QUERIES Q,ADVERTISERS Au
+
+WHERE Q.qid=i AND Au.advertiserId=Ad.aid AND Ad.aid=Ak.aid AND Ak.score=(select max(Ak2.score) from Adrank Ak2));
+
+delete from Adrank where score=(select max(Ak2.score) from Adrank Ak2);
+
+end loop;
+
+
+
+end loop;
+
+end;
+           </code>
+        </pre>
+    </body>
+</html>
